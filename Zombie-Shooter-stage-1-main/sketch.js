@@ -7,6 +7,7 @@ var bombImg
 var bomb
 var bombbbbbbs=10
 var bomvGroup
+var score=0
 
 function preload(){
   
@@ -18,7 +19,7 @@ function preload(){
 }
 
 function setup() {
-
+  
   
   createCanvas(windowWidth,windowHeight);
 
@@ -32,9 +33,10 @@ bomvGroup=new Group()
 player = createSprite(displayWidth-1150, displayHeight-300, 50, 50);
  player.addImage(shooterImg)
    player.scale = 0.3
-   player.debug = true
+   player.debug = false
    player.setCollider("rectangle",0,0,300,300)
-
+   
+   
 
 }
 
@@ -43,12 +45,27 @@ function draw() {
   zombies()
 
  if(groupZombie.isTouching(bomvGroup)){
-  for(var i=0;i<groupZombie;i++){
-    if(groupZombie[i].istouching(bomvGroup)){
+  for(var i=0;i<groupZombie.length;i++){
+    if(groupZombie[i].isTouching(bomvGroup)){
       groupZombie[i].destroy()
       bomvGroup.destroyEach()
+      score+=5
     }
   }
+ }
+ if(score==50){
+  text("u won but still get better",250,250)
+      groupZombie.destroyEach()
+      bomvGroup.destroyEach()
+      player.destroy()
+ }
+ if(groupZombie.isTouching(player)){
+   for(var i=0;i<groupZombie.length;i++){
+    if(groupZombie[i].isTouching(player)){
+      groupZombie[i].destroy()
+    }
+ 
+    }
  }
   //moving the player up and down and making the game mobile compatible using touches
 if(keyDown("UP_ARROW")||touches.length>0){
@@ -72,13 +89,22 @@ if(keyWentDown("space")){
   bomb.velocityX=+30
   bombbbbbbs-=1
   bomvGroup.add(bomb)
+  
 }
 
 //player goes back to original standing image once we stop pressing the space bar
 else if(keyWentUp("space")){
   player.addImage(shooterImg)
 }
-
+if (bombbbbbbs==0){
+  text ("u suck bozo get better",100,100)
+  player.destroy()
+  groupZombie.destroyEach()
+  bomvGroup.destroyEach()
+}
+textSize(20)
+   fill("green")
+   text("score"+score,250,250)
 drawSprites();
 
 }
@@ -88,6 +114,6 @@ function zombies(){
  zombie.addImage(zombieImg)
  zombie.velocityX = -6
  groupZombie.add(zombie)
- zombie.scale =0.3
- zombie.debug=true
+ zombie.scale =0.1
+
 }}
